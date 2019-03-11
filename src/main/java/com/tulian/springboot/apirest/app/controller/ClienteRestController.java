@@ -42,7 +42,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tulian.springboot.apirest.app.models.entity.Cliente;
+import com.tulian.springboot.apirest.app.models.entity.Region;
 import com.tulian.springboot.apirest.app.models.services.IClienteService;
+import com.tulian.springboot.apirest.app.models.services.IRegionService;
 
 @CrossOrigin(origins= {"http://localhost:4200"})
 @RestController
@@ -51,6 +53,8 @@ public class ClienteRestController {
 	
 	@Autowired
 	private IClienteService clienteService;
+	@Autowired
+	private IRegionService regionService;
 	
 	private final Logger log = LoggerFactory.getLogger(ClienteRestController.class);
 	
@@ -150,6 +154,7 @@ public class ClienteRestController {
 		clienteActual.setNombre(cliente.getNombre());
 		clienteActual.setEmail(cliente.getEmail());
 		clienteActual.setCreateAt(cliente.getCreateAt());
+		clienteActual.setRegion(cliente.getRegion());
 		
 		try {
 			clienteNew = clienteService.save(clienteActual);
@@ -270,15 +275,19 @@ public class ClienteRestController {
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.CREATED);
 	}
 
-	  private List<String> obtenerErrores(BindingResult result) {
+	private List<String> obtenerErrores(BindingResult result) {
 			
-		    List<String> errors = result.getFieldErrors()
-		        .stream()
-		        .map(err -> "El campo '" + err.getField() +"' "+ err.getDefaultMessage())
-		        .collect(Collectors.toList());
-		    return errors;				
-		  }
+	    List<String> errors = result.getFieldErrors()
+	        .stream()
+	        .map(err -> "El campo '" + err.getField() +"' "+ err.getDefaultMessage())
+	        .collect(Collectors.toList());
+	    return errors;				
+	  }
 		
+	@GetMapping("/clientes/regiones")
+	public List<Region> listarRegiones (){
+		return regionService.findAll();
+	}
 	
 	
 	
