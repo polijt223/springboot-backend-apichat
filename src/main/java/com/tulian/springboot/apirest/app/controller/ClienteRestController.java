@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 //import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -71,9 +72,9 @@ public class ClienteRestController {
 	}
 	
 	
-	   // Se utiliza ResponseEntity para que el tipo de respuesta que se de al front pueda variar es decir puede ser un error 
-									//, el cliente o un conjunto de errores, esta respuesta va a ser casteada a un Response
-	@GetMapping("/clientes/{id}") 	//Como no sabemos que tipo de respuesta pueda haber el Casteo a ResponseEntity se va a aplicar a "?" para que resirva cualquier Objeto , "?" Seria una forma de definir que se utilizara algo generico
+	//Anotacion usada para da seguridad al acceso        // Se utiliza ResponseEntity para que el tipo de respuesta que se de al front pueda variar es decir puede ser un error 
+	@Secured({"ROLE_ADMIN","ROLE_USER"})  				//, el cliente o un conjunto de errores, esta respuesta va a ser casteada a un Response
+	@GetMapping("/clientes/{id}") 						//Como no sabemos que tipo de respuesta pueda haber el Casteo a ResponseEntity se va a aplicar a "?" para que resirva cualquier Objeto , "?" Seria una forma de definir que se utilizara algo generico
 	public ResponseEntity<?> show(@PathVariable("id") Long id) {
 		Cliente cliente = null;
 		Map<String, Object> response = new HashMap<>();
@@ -95,6 +96,7 @@ public class ClienteRestController {
 		
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@PostMapping("/clientes")
 	@ResponseStatus(HttpStatus.CREATED)     
 	public ResponseEntity<?> create(@Valid @RequestBody Cliente cliente, BindingResult result) {    //Se anota con RequestBody porque resivimos el objeto en formato JSon desde el FrontEnd
@@ -130,6 +132,7 @@ public class ClienteRestController {
 		  return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@PutMapping("/clientes/{id}")   // Se utiliza put para actulizar datos
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> update(@Valid @RequestBody Cliente cliente, BindingResult result, @PathVariable ("id") Long id) {
@@ -170,6 +173,7 @@ public class ClienteRestController {
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.CREATED);
 	}
 	
+	@Secured("ROLE_ADMIN")
 	@DeleteMapping("/clientes/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
@@ -233,6 +237,7 @@ public class ClienteRestController {
 		return new ResponseEntity<Resource>(recurso,cabecera,HttpStatus.OK);
 	}
 	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@PostMapping("/clientes/upload")
 	public ResponseEntity<?> upload(@RequestParam("archivo") MultipartFile archivo, @RequestParam("id") Long id ){
 		
@@ -283,7 +288,8 @@ public class ClienteRestController {
 	        .collect(Collectors.toList());
 	    return errors;				
 	  }
-		
+	
+	@Secured("ROLE_ADMIN")
 	@GetMapping("/clientes/regiones")
 	public List<Region> listarRegiones (){
 		return regionService.findAll();
