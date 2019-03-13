@@ -21,7 +21,7 @@ public class ResourceServerCofig extends ResourceServerConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/clientes","/api/clientes/page/**","/api/clientes/img/**","/images/**").permitAll()    //Doble asterisco ** significa que todo o cualquier nombre es admitido
+		http.authorizeRequests().antMatchers(HttpMethod.GET,"/api/clientes","/api/clientes/page/**","/api/uploads/img/**","/images/**").permitAll()    //Doble asterisco ** significa que todo o cualquier nombre es admitido
 		/*.antMatchers(HttpMethod.GET, "/api/clientes/{id}").hasAnyRole("USER","ADMIN")
 		.antMatchers(HttpMethod.POST, "/api/clientes/upload").hasAnyRole("USER","ADMIN")
 		.antMatchers(HttpMethod.POST, "/api/clientes").hasRole("ADMIN")
@@ -37,7 +37,7 @@ public class ResourceServerCofig extends ResourceServerConfigurerAdapter {
 		config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
 		config.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
 		config.setAllowCredentials(true);
-		config.setAllowedHeaders(Arrays.asList("Content.Type","Authorization"));
+		config.setAllowedHeaders(Arrays.asList("Content-Type","Authorization"));
 		
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
